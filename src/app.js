@@ -3,7 +3,8 @@ const express = require('express');
 const compression = require('compression');
 const cookieParse = require('cookie-parser');
 const { join } = require('path');
-// const router = require("./routes/router");
+const router = require('./routes/router');
+const logger = require('./middlewares/logger');
 
 const app = express();
 
@@ -14,7 +15,7 @@ app.use(compression());
 app.use(cookieParse());
 app.use(express.static(join(__dirname, '..', 'public')));
 app.set('port', process.env.PORT || 8000);
-
-// app.use(router);
+app.use(logger);
+app.use(router);
 
 module.exports = app;

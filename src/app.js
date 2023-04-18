@@ -16,6 +16,6 @@ app.use(cookieParse());
 app.use(express.static(join(__dirname, '..', 'public')));
 app.set('port', process.env.PORT || 8000);
 app.use(logger);
-app.use(router);
+app.use('/api/v1/', router);
 
 module.exports = app;

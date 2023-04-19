@@ -5,6 +5,7 @@ const cookieParse = require('cookie-parser');
 const { join } = require('path');
 const router = require('./routes/router');
 const logger = require('./middlewares/logger');
+const { clientError, serverError } = require('./controller/errors');
 
 const app = express();
 
@@ -17,5 +18,7 @@ app.use(express.static(join(__dirname, '..', 'public')));
 app.set('port', process.env.PORT || 8000);
 app.use(logger);
 app.use('/api/v1/', router);
+app.use(clientError);
+app.use(serverError);
 
 module.exports = app;

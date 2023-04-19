@@ -9,7 +9,7 @@ const signup = (req, res, next) => {
   signupSchema.validateAsync({ username, email, password })
     .then(() => getUserByEmail(email))
     .then((data) => {
-      if (data.rows[0]) throw new CustomError('Email Already Exist , Please Signin instead', 400);
+      if (data.rows[0]) throw new CustomError('Email Already Exist , Please Signing instead', 400);
     })
     .then(() => getUserByUsername(username))
     .then((data) => { if (data.rows[0]) throw new CustomError('Username Already Exist , Please Choose another Username', 400); })

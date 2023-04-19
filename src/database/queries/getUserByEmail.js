@@ -2,10 +2,10 @@ const connection = require('../config/connection');
 
 const getUserByEmail = (email) => {
   const sql = {
-    text: 'SELECT * FORM USERS WHERE EMAIL = $1',
+    text: 'SELECT * FROM users WHERE email = $1',
     values: [email],
   };
-  connection.query(sql);
+  return connection.query(sql);
 };
 
 module.exports = getUserByEmail;

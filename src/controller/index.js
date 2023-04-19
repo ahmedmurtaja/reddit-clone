@@ -1,3 +1,6 @@
+const signin = require('./signinController');
 const signup = require('./signupController');
 
-module.exports = signup;
+module.exports = {
+  signin, signup,
+};

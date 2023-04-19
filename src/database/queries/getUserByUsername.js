@@ -2,10 +2,10 @@ const connection = require('../config/connection');
 
 const getUserByUsername = (username) => {
   const sql = {
-    text: 'SELECT * FROM USERS WHERE USERNAME = $1',
+    text: 'SELECT * FROM users WHERE username = $1',
     values: [username],
   };
-  connection.query(sql);
+  return connection.query(sql);
 };
 
 module.exports = getUserByUsername;

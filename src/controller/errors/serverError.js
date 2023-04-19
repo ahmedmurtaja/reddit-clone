@@ -1,10 +1,10 @@
 const { JsonWebTokenError } = require('jsonwebtoken');
 const CustomError = require('../../utils/CustomError');
 
-// eslint-disable-next-line no-unused-vars
+// eslint-disable-next-line no-unused-vars, consistent-return
 const serverError = (err, req, res, next) => {
   if (err.isJoi) {
-    res.status(400).json(
+    return res.status(400).json(
       {
         success: false,
         data: {
@@ -13,8 +13,8 @@ const serverError = (err, req, res, next) => {
         },
       },
     );
-  } else if (err instanceof CustomError) {
-    res.status(err.statusCode).json(
+  } if (err instanceof CustomError) {
+    return res.status(err.statusCode).json(
       {
         success: false,
         data: {
@@ -23,8 +23,8 @@ const serverError = (err, req, res, next) => {
         },
       },
     );
-  } else if (err instanceof JsonWebTokenError) {
-    res.status(401).json(
+  } if (err instanceof JsonWebTokenError) {
+    return res.status(401).json(
       {
         success: false,
         data: {
@@ -33,18 +33,16 @@ const serverError = (err, req, res, next) => {
         },
       },
     );
-  } else {
-    res.status(500).json(
-      {
-        success: false,
-        data: {
-          message: 'Internal server error',
-          error: err.message,
-          statusCode: 500,
-        },
+  } res.status(500).json(
+    {
+      success: false,
+      data: {
+        message: 'Internal server error',
+        error: err.message,
+        statusCode: 500,
       },
-    );
-  }
+    },
+  );
 };
 
 module.exports = serverError;

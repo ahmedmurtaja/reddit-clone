@@ -20,6 +20,7 @@ const serverError = (err, req, res, next) => {
         data: {
           message: err.message,
           statusCode: err.statusCode,
+          From: 'custom',
         },
       },
     );
@@ -30,6 +31,7 @@ const serverError = (err, req, res, next) => {
         data: {
           message: 'Un Authorized',
           statusCode: 401,
+          From: 'jwt',
         },
       },
     );

@@ -7,7 +7,7 @@ const checkAuth = (req, res, next) => {
   verifyToken(token)
     .then((decodedToken) => {
       req.user = decodedToken;
-      next();
+      return next();
     }).catch((err) => next(err));
 };
 

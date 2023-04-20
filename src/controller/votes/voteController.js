@@ -1,5 +1,5 @@
-const { voteQuery } = require('../database/queries');
-const { voteSchema } = require('../utils/validation');
+const { voteQuery } = require('../../database/queries');
+const { voteSchema } = require('../../utils/validation');
 
 const voteController = (req, res, next) => {
   const { postId, vote } = req.params;

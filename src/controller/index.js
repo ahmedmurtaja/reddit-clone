@@ -1,7 +1,7 @@
-const getAllPosts = require('./getPostsController');
-const newPost = require('./newPostController');
-const signin = require('./signinController');
-const signup = require('./signupController');
+const getAllPosts = require('./posts/getPostsController');
+const newPost = require('./posts/newPostController');
+const signin = require('./users/signinController');
+const signup = require('./users/signupController');
 
 module.exports = {
   signin, signup, getAllPosts, newPost,

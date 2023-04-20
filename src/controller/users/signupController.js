@@ -1,8 +1,8 @@
 const bcrypt = require('bcryptjs');
-const { signupQuery, getUserByEmail, getUserByUsername } = require('../database/queries');
-const { signupSchema } = require('../utils/validation');
-const { signToken } = require('../utils/jwt');
-const CustomError = require('../utils/CustomError');
+const { signupQuery, getUserByEmail, getUserByUsername } = require('../../database/queries');
+const { signupSchema } = require('../../utils/validation');
+const { signToken } = require('../../utils/jwt');
+const CustomError = require('../../utils/CustomError');
 
 const signup = (req, res, next) => {
   const { username, email, password } = req.body;

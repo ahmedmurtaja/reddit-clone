@@ -1,5 +1,5 @@
-const { insertPost } = require('../database/queries');
-const { postSchema } = require('../utils/validation');
+const { insertPost } = require('../../database/queries');
+const { postSchema } = require('../../utils/validation');
 
 const newPost = (req, res, next) => {
   const { content } = req.body;

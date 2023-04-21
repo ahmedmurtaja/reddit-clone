@@ -6,6 +6,8 @@ const signupQuery = require('./users/signupQuery');
 const voteQuery = require('./votes/voteQuery');
 const checkVote = require('./votes/checkVote');
 const deleteVote = require('./votes/deleteVote');
+const getAllCommentsQuery = require('./comments/getAllcommentsQuery');
+const getPost = require('./posts/getPost');
 
 module.exports = {
   signupQuery,
@@ -16,4 +18,6 @@ module.exports = {
   voteQuery,
   checkVote,
   deleteVote,
+  getAllCommentsQuery,
+  getPost,
 };

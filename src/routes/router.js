@@ -4,7 +4,6 @@ const postRouter = require('./postRouter');
 const voteRouter = require('./voteRouter');
 const commentsRouter = require('./commentsRouter');
 
-
 const router = express.Router();
 
 router.use('/users', userRouter);

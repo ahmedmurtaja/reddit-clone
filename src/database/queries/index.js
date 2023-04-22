@@ -8,6 +8,9 @@ const checkVote = require('./votes/checkVote');
 const deleteVote = require('./votes/deleteVote');
 const getAllCommentsQuery = require('./comments/getAllcommentsQuery');
 const getPost = require('./posts/getPost');
+const countVote = require('./votes/countVote');
+
+
 
 module.exports = {
   signupQuery,
@@ -20,4 +23,5 @@ module.exports = {
   deleteVote,
   getAllCommentsQuery,
   getPost,
+  countVote,
 };

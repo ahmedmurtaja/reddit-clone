@@ -6,7 +6,7 @@ class ClientValidator {
       // eslint-disable-next-line no-restricted-globals
       if (isNaN(num)) {
         // eslint-disable-next-line prefer-promise-reject-errors
-        reject('Invalid number');
+        reject(new Error('Invalid number'));
       } else {
         resolve('Valid number');
       }
@@ -17,7 +17,7 @@ class ClientValidator {
     return new Promise((resolve, reject) => {
       if (!str || typeof str !== 'string') {
         // eslint-disable-next-line prefer-promise-reject-errors
-        reject('Invalid string');
+        reject(new Error('Invalid string'));
       } else {
         resolve('Valid string');
       }
@@ -29,7 +29,7 @@ class ClientValidator {
       const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!email || !pattern.test(email)) {
         // eslint-disable-next-line prefer-promise-reject-errors
-        reject('Invalid email');
+        reject(new Error('Invalid email'));
       } else {
         resolve('Valid email');
       }
@@ -38,8 +38,8 @@ class ClientValidator {
 
   static validateMin(value, minValue) {
     return new Promise((resolve, reject) => {
-      if (value < minValue) {
-        reject(`Value must be greater than or equal to ${minValue}`);
+      if (value.length < minValue) {
+        reject(new Error(`Value must be greater than or equal to ${minValue}`));
       } else {
         resolve('Valid value');
       }
@@ -50,7 +50,7 @@ class ClientValidator {
     return new Promise((resolve, reject) => {
       if (value > maxValue) {
         // eslint-disable-next-line prefer-promise-reject-errors
-        reject(`Value must be less than or equal to ${maxValue}`);
+        reject(new Error(`Value must be less than or equal to ${maxValue}`));
       } else {
         resolve('Valid value');
       }
@@ -67,6 +67,9 @@ function listen(selector, eventType) {
     }
 
     element.addEventListener(eventType, (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
       resolve(event);
     }, { once: true });
 

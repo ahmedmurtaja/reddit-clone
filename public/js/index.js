@@ -1,6 +1,5 @@
 const posts = document.getElementById('posts');
 
-
 fetch('/api/v1/posts')
   .then((res) => res.json())
   .then((data) => {
@@ -72,5 +71,4 @@ fetch('/api/v1/posts')
   })
   .catch((err) => {
     console.log(err);
-  }
-);
+  });

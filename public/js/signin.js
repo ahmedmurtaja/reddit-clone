@@ -1,22 +1,22 @@
+let data;
 listen('#sign-in-form', 'submit')
   .then((event) => {
     event.preventDefault();
     const form = event.target;
     const formData = new FormData(form);
-    const data = Object.fromEntries(formData);
-    console.log(data);
-    return data;
+    data = Object.fromEntries(formData);
   })
-  .then((data) => {
-    const { email, password } = data;
-    return fetch('/api/v1/users/signin', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    });
-  }).then((res) => res.json())
+  .then(() => ClientValidator.validateEmail(data.email))
+  .then(() => ClientValidator.validateMin(data.password, 6))
+  .then(() => data)
+  .then(({ email, password }) => fetch('/api/v1/users/signin', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email, password }),
+  }))
+  .then((res) => res.json())
   .then((res) => {
     if (res.success) {
       window.location.href = '/';

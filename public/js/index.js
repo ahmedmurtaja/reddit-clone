@@ -1,5 +1,4 @@
 const posts = document.getElementById('posts');
-const openBtn = document.querySelectorAll('.open-btn');
 const closeBtn = document.querySelector('.close-btn');
 const overlay = document.querySelector('.overlay');
 const commentContent = document.querySelector('#comment-content');
@@ -164,10 +163,9 @@ fetch('/api/v1/posts')
             fetch(`api/v1/comments/${postId}`)
               .then((result) => result.json())
               .then((end) => {
-                const { data } = end;
-                console.log(data);
-                commentContent.innerHTML = ''
-                data.forEach((comment) => {
+                const { _data } = end;
+                commentContent.innerHTML = '';
+                _data.forEach((comment) => {
                   const commentDiv = document.createElement('div');
                   commentDiv.innerHTML = `
                     <p>${comment.commentdata}</p>
@@ -185,7 +183,6 @@ fetch('/api/v1/posts')
 
                 // add Scroll to the comment content container
                 commentContent.classList.add('scroll');
-
 
                 // window.location.href = `comments.html?${commentId}`;
               });

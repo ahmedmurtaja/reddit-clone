@@ -110,13 +110,32 @@ fetch('/api/v1/posts')
 
           const button2 = document.createElement('button');
           button2.classList.add('left-button', 'post-button', 'bg-second-color', 'border-0', 'text-black', 'p-1');
+          button2.value = post.id;
+          const span3 = document.createElement('span');
 
+          button2.addEventListener('click', (e) => {
+            e.preventDefault();
+            fetch(`/api/v1/vote/${button2.value}/1`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then((response) => response.json())
+              .then((_res) => {
+                if (_res.success) {
+                  span3.textContent = parseInt(span3.textContent, 10) + 1;
+                } else if (_res.data.statusCode == 400) alert('You can only vote once');
+                else {
+                  alert('You must be logged in to vote');
+                  window.location.href = '/html/signin.html';
+                }
+              });
+          });
           const img3 = document.createElement('img');
           img3.src = 'img/up.png';
           img3.width = '20';
           img3.classList.add('ms-2');
 
-          const span3 = document.createElement('span');
           span3.textContent = voteCount;
 
           button2.appendChild(img3);
@@ -124,7 +143,24 @@ fetch('/api/v1/posts')
 
           const button3 = document.createElement('button');
           button3.classList.add('right-button', 'post-button', 'bg-second-color', 'border-0', 'text-black', 'p-1');
+          button3.value = post.id;
 
+          button3.addEventListener('click', (e) => {
+            e.preventDefault();
+            fetch(`/api/v1/vote/${button3.value}/-1`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then((response) => response.json())
+              .then((_res) => {
+                if (_res.success) { span3.textContent = parseInt(span3.textContent, 10) - 1; } else if (_res.data.statusCode == 400) alert('You can only vote once');
+                else {
+                  alert('You must be logged in to vote');
+                  window.location.href = '/html/signin.html';
+                }
+              });
+          });
           const img4 = document.createElement('img');
           img4.src = 'img/down.png';
           img4.width = '20';
@@ -163,9 +199,8 @@ fetch('/api/v1/posts')
             fetch(`api/v1/comments/${postId}`)
               .then((result) => result.json())
               .then((end) => {
-                const { _data } = end;
                 commentContent.innerHTML = '';
-                _data.forEach((comment) => {
+                end.data.forEach((comment) => {
                   const commentDiv = document.createElement('div');
                   commentDiv.innerHTML = `
                     <p>${comment.commentdata}</p>
@@ -218,10 +253,3 @@ fetch('/api/v1/posts')
 closeBtn.addEventListener('click', () => {
   overlay.style.display = 'none';
 });
-
-// if (comment != null) {
-//   comment.addEventListener('click', (e) => {
-//     e.preventDefault();
-//     console.log('comment clicked');
-//   });
-// }

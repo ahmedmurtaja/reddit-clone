@@ -122,9 +122,13 @@ fetch('/api/v1/posts')
               },
             }).then((response) => response.json())
               .then((_res) => {
-                if (_res.success) { span3.textContent = parseInt(span3.textContent, 10) + 1;
+                if (_res.success) {
+                  span3.textContent = parseInt(span3.textContent, 10) + 1;
+                } else if (_res.data.statusCode == 400) alert('You can only vote once');
+                else {
+                  alert('You must be logged in to vote');
+                  window.location.href = '/html/signin.html';
                 }
-                else alert('You can only vote once');
               });
           });
           const img3 = document.createElement('img');
@@ -150,8 +154,11 @@ fetch('/api/v1/posts')
               },
             }).then((response) => response.json())
               .then((_res) => {
-                if (_res.success) { span3.textContent = parseInt(span3.textContent, 10) - 1; }
-                else alert('You can only vote once');
+                if (_res.success) { span3.textContent = parseInt(span3.textContent, 10) - 1; } else if (_res.data.statusCode == 400) alert('You can only vote once');
+                else {
+                  alert('You must be logged in to vote');
+                  window.location.href = '/html/signin.html';
+                }
               });
           });
           const img4 = document.createElement('img');
@@ -192,9 +199,8 @@ fetch('/api/v1/posts')
             fetch(`api/v1/comments/${postId}`)
               .then((result) => result.json())
               .then((end) => {
-                const { _data } = end;
                 commentContent.innerHTML = '';
-                _data.forEach((comment) => {
+                end.data.forEach((comment) => {
                   const commentDiv = document.createElement('div');
                   commentDiv.innerHTML = `
                     <p>${comment.commentdata}</p>
@@ -247,10 +253,3 @@ fetch('/api/v1/posts')
 closeBtn.addEventListener('click', () => {
   overlay.style.display = 'none';
 });
-
-// if (comment != null) {
-//   comment.addEventListener('click', (e) => {
-//     e.preventDefault();
-//     console.log('comment clicked');
-//   });
-// }

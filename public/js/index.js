@@ -3,6 +3,15 @@ const closeBtn = document.querySelector('.close-btn');
 const overlay = document.querySelector('.overlay');
 const commentContent = document.querySelector('#comment-content');
 
+const deleteVote = (postId) => fetch(`/api/v1/vote/${postId}`, {
+  method: 'DELETE',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+  .then((res) => res.json())
+  .catch((err) => console.log(err));
+
 fetch('/api/v1/posts')
   .then((res) => res.json())
   .then((data) => {
@@ -10,7 +19,7 @@ fetch('/api/v1/posts')
       fetch(`/api/v1/vote/${post.id}`)
         .then((response) => response.json())
         .then((res) => {
-          const voteCount = res.data[0].count;
+          const voteCount = res.data[0].sum;
           console.log(voteCount);
           const div = document.createElement('div');
           const div1 = document.createElement('div');
@@ -123,9 +132,19 @@ fetch('/api/v1/posts')
             }).then((response) => response.json())
               .then((_res) => {
                 if (_res.success) {
-                  span3.textContent = parseInt(span3.textContent, 10) + 1;
-                } else if (_res.data.statusCode == 400) alert('You can only vote once');
-                else {
+                  fetch(`/api/v1/vote/${post.id}`)
+                    .then((response) => response.json())
+                    .then((res) => {
+                      span3.textContent = res.data[0].sum;
+                    });
+                } else if (_res.data.statusCode == 400) {
+                  deleteVote(button2.value);
+                  fetch(`/api/v1/vote/${post.id}`)
+                    .then((response) => response.json())
+                    .then((res) => {
+                      span3.textContent = res.data[0].sum;
+                    });
+                } else {
                   alert('You must be logged in to vote');
                   window.location.href = '/html/signin.html';
                 }
@@ -154,8 +173,20 @@ fetch('/api/v1/posts')
               },
             }).then((response) => response.json())
               .then((_res) => {
-                if (_res.success) { span3.textContent = parseInt(span3.textContent, 10) - 1; } else if (_res.data.statusCode == 400) alert('You can only vote once');
-                else {
+                if (_res.success) {
+                  fetch(`/api/v1/vote/${post.id}`)
+                    .then((response) => response.json())
+                    .then((res) => {
+                      span3.textContent = res.data[0].sum;
+                    });
+                } else if (_res.data.statusCode == 400) {
+                  deleteVote(button2.value);
+                  fetch(`/api/v1/vote/${post.id}`)
+                    .then((response) => response.json())
+                    .then((res) => {
+                      span3.textContent = res.data[0].sum;
+                    });
+                } else {
                   alert('You must be logged in to vote');
                   window.location.href = '/html/signin.html';
                 }

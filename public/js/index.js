@@ -2,6 +2,146 @@ const posts = document.getElementById('posts');
 const closeBtn = document.querySelector('.close-btn');
 const overlay = document.querySelector('.overlay');
 const commentContent = document.querySelector('#comment-content');
+const logout = document.querySelector('#logout');
+const photo = document.querySelector('#photo');
+const signupBtn = document.querySelector('#signupBtn');
+const post = document.querySelector('#post');
+
+post.addEventListener('click', () => {
+  // create post modal
+  const div = document.createElement('div');
+  div.classList.add('modal', 'fade');
+  div.setAttribute('id', 'postModal');
+  div.setAttribute('tabindex', '-1');
+  div.setAttribute('aria-labelledby', 'postModalLabel');
+  div.setAttribute('aria-hidden', 'true');
+
+  const div1 = document.createElement('div');
+  div1.classList.add('modal-dialog', 'modal-dialog-centered');
+  div.appendChild(div1);
+
+  const div2 = document.createElement('div');
+  div2.classList.add('modal-content');
+  div1.appendChild(div2);
+
+  const div3 = document.createElement('div');
+  div3.classList.add('modal-header');
+
+  const h5 = document.createElement('h5');
+  h5.classList.add('modal-title');
+  h5.setAttribute('id', 'postModalLabel');
+  h5.textContent = 'Create Post';
+  div3.appendChild(h5);
+
+  const button = document.createElement('button');
+  button.classList.add('btn-close');
+  button.setAttribute('type', 'button');
+  button.setAttribute('data-bs-dismiss', 'modal');
+  button.setAttribute('aria-label', 'Close');
+  div3.appendChild(button);
+
+  div2.appendChild(div3);
+
+  const div4 = document.createElement('div');
+  div4.classList.add('modal-body');
+
+  const form = document.createElement('form');
+  form.setAttribute('method', 'POST');
+  form.setAttribute('action', '/api/v1/posts/new');
+  div4.appendChild(form);
+
+  const div5 = document.createElement('div');
+  div5.classList.add('mb-3');
+
+  const label = document.createElement('label');
+  label.classList.add('form-label');
+  label.setAttribute('for', 'post-content');
+  label.textContent = 'Post Content';
+  div5.appendChild(label);
+
+  const textarea = document.createElement('textarea');
+  textarea.classList.add('form-control');
+  textarea.setAttribute('id', 'post-content');
+  textarea.setAttribute('name', 'content');
+  textarea.setAttribute('rows', '3');
+  div5.appendChild(textarea);
+
+  form.appendChild(div5);
+
+  const div6 = document.createElement('div');
+  div6.classList.add('modal-footer');
+
+  const button1 = document.createElement('button');
+  button1.classList.add('btn', 'btn-secondary');
+  button1.setAttribute('type', 'button');
+  button1.setAttribute('data-bs-dismiss', 'modal');
+  button1.textContent = 'Close';
+  div6.appendChild(button1);
+
+  const button2 = document.createElement('button');
+  button2.classList.add('btn', 'btn-primary');
+  button2.setAttribute('type', 'submit');
+  button2.textContent = 'Post';
+  div6.appendChild(button2);
+
+  div6.addEventListener('click', (e) => {
+    e.preventDefault();
+    const content = document.querySelector('#post-content').value;
+    fetch('/api/v1/posts/new', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ content }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success === true) {
+          window.location.href = '/';
+        } else if (data.success === false) {
+          alert(data.message);
+        }
+      })
+      .catch((err) => alert(err.message));
+  });
+  form.appendChild(div6);
+  div2.appendChild(form);
+
+  document.body.appendChild(div);
+
+  const postModal = new bootstrap.Modal(document.getElementById('postModal'), {
+    keyboard: false,
+  });
+  postModal.show();
+});
+
+logout.addEventListener('click', () => {
+  fetch('/api/v1/users/logout')
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.success === true) {
+        window.location.href = '/html/signin.html';
+      }
+    })
+    .catch((err) => alert(err.message));
+});
+
+// check if user is logged in
+fetch('/api/v1/users/checklogin')
+  .then((res) => res.json())
+  .then((data) => {
+    if (data.success === true) {
+      signupBtn.style.display = 'none';
+      photo.style.display = 'block';
+      photo.src = 'https://www.seekpng.com/png/full/115-1150622_avatar-demo2x-man-avatar-icon-png.png'; // data.data.avatar;
+      logout.style.display = 'block';
+    } else {
+      signupBtn.style.display = 'block';
+      photo.style.display = 'none';
+      logout.style.display = 'none';
+    }
+  })
+  .catch((err) => alert(err.message));
 
 const deleteVote = (postId) => fetch(`/api/v1/vote/${postId}`, {
   method: 'DELETE',
@@ -19,7 +159,7 @@ fetch('/api/v1/posts')
       fetch(`/api/v1/vote/${post.id}`)
         .then((response) => response.json())
         .then((res) => {
-          const voteCount = res.data[0].sum;
+          const voteCount = res.data[0].sum || 0;
           console.log(voteCount);
           const div = document.createElement('div');
           const div1 = document.createElement('div');
@@ -207,11 +347,61 @@ fetch('/api/v1/posts')
           button4.classList.add('post-button', 'post-button-bg', 'border-0', 'rounded-circle', 'text-black', 'p-1');
 
           const img5 = document.createElement('img');
-          img5.src = 'img/refresh.png';
-          img5.width = '20';
+          const plus = document.createElement('i');
+          plus.classList.add('fas', 'fa-plus');
+          button4.appendChild(plus);
 
           const span4 = document.createElement('span');
-          span4.textContent = '1';
+          span4.textContent = 'add comment';
+
+          button4.value = post.id;
+          const div12 = document.createElement('div');
+
+          button4.addEventListener('click', (e) => {
+            // create comment input field
+            div12.textContent = '';
+            e.preventDefault();
+            const postId = button4.value;
+            const commentInput = document.createElement('input');
+            commentInput.classList.add('form-control', 'mb-2');
+            commentInput.setAttribute('type', 'text');
+            commentInput.setAttribute('placeholder', 'Add comment');
+            commentInput.setAttribute('id', 'comment-input');
+
+            const commentButton = document.createElement('button');
+            commentButton.classList.add('btn', 'btn-primary', 'mb-2');
+            commentButton.setAttribute('id', 'comment-button');
+            commentButton.textContent = 'Add';
+
+            commentButton.addEventListener('click', (e) => {
+              e.preventDefault();
+              const commentData = commentInput.value;
+              fetch(`/api/v1/comments/new/${postId}`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  comment: commentData,
+                }),
+              }).then((response) => response.json())
+                .then((res) => {
+                  if (res.success) {
+                    alert('Comment added');
+                  } else if (res.data.statusCode == 400) {
+                    alert('add valid comment');
+                  } else {
+                    alert('You must be logged in to comment');
+                    window.location.href = '/html/signin.html';
+                  }
+                });
+            });
+
+            div12.appendChild(commentInput);
+            div12.appendChild(commentButton);
+
+            div10.appendChild(div12);
+          });
 
           button4.appendChild(img5);
           button4.appendChild(span4);
@@ -260,7 +450,7 @@ fetch('/api/v1/posts')
           img6.classList.add('p-1');
 
           const span5 = document.createElement('span');
-          span5.textContent = '123';
+          span5.textContent = 'comments';
 
           button5.appendChild(img6);
           button5.appendChild(span5);
